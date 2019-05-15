@@ -26,7 +26,7 @@
                 <router-link to="/register">注册</router-link>
               </li>
               <li v-else>
-                <a href="javascript:void(0)"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{userName}}</a>
+                <router-link to="/me"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>{{userName}}</router-link>
                 <a v-on:click.prevent="logOut">退出登录</a>
               </li>
           </ul>

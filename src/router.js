@@ -7,6 +7,7 @@ import CustomersDetail from './views/CustomersDetail.vue'
 import Edit from './views/Edit.vue'
 import Register from './views/Register.vue'
 import Login from './views/Login.vue'
+import Person from './views/Person.vue'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: About
+    },
+    {
+      path: '/me',
+      name: 'person',
+      component: Person
     },
     {
       path: '/add',
