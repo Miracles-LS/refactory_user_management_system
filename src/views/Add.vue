@@ -1,6 +1,7 @@
 <template>
     <div class="add container">
-        <h1 class="page-header">添加用户</h1>
+        <router-link to="/" class="btn btn-default">返回</router-link>
+        <h1 class="page-header">添加数据</h1>
         <Alert v-if="alert" :message="alert"></Alert>
         <form v-on:submit.prevent="addCustomer">
             <div class="well">
@@ -31,7 +32,6 @@
                 </div>
                 <div class="form-group">
                     <label>个人简介</label>
-                    <!-- <input type="text" class="form-control" placeholder="profile" v-model="customer.profile"> -->
                     <textarea rows="10" class="form-control" v-model="customer.profile"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">添加</button>
@@ -42,6 +42,8 @@
 
 <script>
     import Alert from './Alert'
+    import AV from '../leancloud.js'
+    var Customers = AV.Object.extend('personalDatas'); // (数据库名)。只注册一次
     export default {
         name: 'add',
         data() {
@@ -61,15 +63,35 @@
         methods: {
             addCustomer(){
                 if(!this.customer.name || !this.customer.phone || !this.customer.email){
-                    // console.log('请输入相应的内容')
                     this.alert='请输入对应的信息！';
                 }else{
-                    this.$axios.post('/users',this.customer)
-                    .then((res)=>{
+                    /* json-server + axios
+                        this.$axios.post('/users',this.customer)
+                        .then((res)=>{
+                            console.log(res)
+                            this.$router.push({name:'customers',params:{ alert:'用户信息添加成功！' }});
+                        })
+                    */
+
+                    /*bmob
+                    const query = Bmob.Query('personalDatas');
+                    query.save(this.customer).then(res => {
                         console.log(res)
-                        this.$router.push({name:'customers',params:{ alert:'用户信息添加成功！' }});
-                    })
-                }
+                        this.$router.push({name:'customers',params:{ alert:'信息添加成功！'}});
+                    }).catch(err => {
+                        console.log(err)
+                    }) 
+                    */
+                    var customers = new Customers();
+                    customers.save(this.customer)
+                        .then((res) => {
+                            console.log(res)
+                            this.$router.push({name:'customers',params:{ alert:'信息添加成功！'}});
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                }                
             }
         },
         components:{

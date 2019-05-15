@@ -5,6 +5,8 @@ import About from './views/About.vue'
 import Add from './views/Add.vue'
 import CustomersDetail from './views/CustomersDetail.vue'
 import Edit from './views/Edit.vue'
+import Register from './views/Register.vue'
+import Login from './views/Login.vue'
 
 Vue.use(Router)
 
@@ -15,7 +17,7 @@ export default new Router({
     {
       path: '/',
       name: 'customers',
-      component: Customers
+      component: Customers,
     },
     {
       path: '/about',
@@ -36,6 +38,16 @@ export default new Router({
       path: '/edit/:id',
       name: 'edit',
       component: Edit
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     },
     {
       path:'*',

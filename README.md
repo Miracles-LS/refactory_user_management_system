@@ -1,6 +1,6 @@
-# 用 Bmob + vuex 重构用户管理系统
+# 用 lencloud + vuex 重构用户管理系统
 
-# 基于 Bmob 服务器进行增删改查数据
+# 基于 lencloud 服务器进行增删改查数据
 
 ## Project setup
 ```

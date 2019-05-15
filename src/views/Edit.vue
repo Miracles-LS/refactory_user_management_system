@@ -1,5 +1,6 @@
 <template>
     <div class="edit container">
+        <router-link :to="'/customer/'+ id" class="btn btn-default">返回</router-link>
         <h1 class="page-header">编辑用户</h1>
         <Alert v-if="alert" :message="alert"></Alert>
         <form v-on:submit.prevent="editCustomer">
@@ -32,7 +33,6 @@
                 </div>
                 <div class="form-group">
                     <label>个人简介</label>
-                    <!-- <input type="text" class="form-control" placeholder="profile" v-model="customer.profile"> -->
                     <textarea rows="10" class="form-control" v-model="customer.profile"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">确认</button>
@@ -43,6 +43,7 @@
 
 <script>
     import Alert from './Alert.vue'
+    import AV from '../leancloud.js'
     export default {
         name: 'edit',
         data() {
@@ -62,22 +63,73 @@
         },
         methods: {
             fetchCustomers(){
-                this.$axios.get('/users/'+this.id)
-                .then((res) => {
-                    console.log(res)
-                    this.customer = res.data
-                })
+                //leancloud
+                var personalData = new AV.Query('personalDatas');
+                personalData.get(this.id)
+                    .then((res) => {
+                        this.customer = res._serverData
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+
+                /* json-server + axios
+                    this.$axios.get('/users/'+this.id)
+                    .then((res) => {
+                        console.log(res)
+                        this.customer = res.data
+                    })
+                */
+
+                /*  bmob
+                    const query = Bmob.Query('personalDatas');
+                    query.get(this.id).then(res => {
+                        // console.log(res)
+                        this.customer = res
+                    });
+                */
             },
             editCustomer() {
                 if (!this.customer.name || !this.customer.phone || !this.customer.email) {
                     console.log('请输入相应的内容')
                     this.alert = '请输入相应的内容！'
                 } else {
+                    //leancloud
+                    var customers = AV.Object.createWithoutData('personalDatas', this.id);
+                    customers.save(this.customer)
+                        .then((res) => {
+                            this.$router.push({name:'customers',params:{ alert:'信息编辑成功！'}});
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+
+                    /* json-server + axios
                     this.$axios.put('/users/'+this.id, this.customer)
                         .then((res) => {
                             console.log(res)
                             this.$router.push({ name: 'customers', params: { alert: '用户信息编辑成功！' } });
                         })
+                    */
+
+                    /*bmob
+                        const query = Bmob.Query('personalDatas');
+                        query.set('id', this.id)
+                        query.set('name',this.customer.name)
+                        query.set('profile',this.customer.profile)
+                        query.set('phone',this.customer.phone)
+                        query.set('email',this.customer.email)
+                        query.set('education',this.customer.education)
+                        query.set('graduationschool',this.customer.graduationschool)
+                        query.set('profession',this.customer.profession)
+                        query.save().then(res => {
+                            console.log(res)
+                            // res.save(this.customer)
+                            this.$router.push({name:'customers',params:{ alert:'信息编辑成功！'}});
+                        }).catch(err => {
+                            console.log(err)
+                        }) 
+                    */
                 }
             }
         },
