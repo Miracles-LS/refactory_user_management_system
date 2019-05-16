@@ -1,7 +1,7 @@
 <template>
     <div class="edit container">
         <router-link :to="'/customer/'+ id" class="btn btn-default">返回</router-link>
-        <h1 class="page-header">编辑用户</h1>
+        <h1 class="page-header">编辑数据</h1>
         <Alert v-if="alert" :message="alert"></Alert>
         <form v-on:submit.prevent="editCustomer">
             <div class="well">
