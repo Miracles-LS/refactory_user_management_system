@@ -12,7 +12,7 @@
                 </div>
                 <div class="form-group">
                     <label>电话</label>
-                    <input type="text" class="form-control" placeholder="phone" v-model="customer.phone">
+                    <input type="tel"class="form-control" placeholder="phone" v-model="customer.phone" maxlength="11">
                 </div>
                 <div class="form-group">
                     <label>邮箱</label>
@@ -42,7 +42,8 @@
 
 <script>
     import Alert from './Alert'
-    import AV from '../leancloud.js'
+    import AV from '../leancloud'
+    import CheckExpFun from '../checkExpFun'
     var Customers = AV.Object.extend('personalDatas'); // (数据库名)。只注册一次
     export default {
         name: 'add',
@@ -64,6 +65,13 @@
             addCustomer(){
                 if(!this.customer.name || !this.customer.phone || !this.customer.email){
                     this.alert='请输入对应的信息！';
+                    return
+                }else if((!CheckExpFun.checkPhone(this.customer.phone))||(this.customer.phone.length<11)){
+                    this.alert = '请输入正确的电话号码！'
+                    return
+                }else if(!CheckExpFun.checkEmail(this.customer.email)){
+                    this.alert = '请输入正确的邮箱！'
+                    return
                 }else{
                     /* json-server + axios
                         this.$axios.post('/users',this.customer)
@@ -85,13 +93,20 @@
                     var customers = new Customers();
                     customers.save(this.customer)
                         .then((res) => {
-                            console.log(res)
                             this.$router.push({name:'customers',params:{ alert:'信息添加成功！'}});
                         })
                         .catch((error) => {
                             console.log(error)
                         })
                 }                
+            }
+        },
+        updated() {
+            if(this.alert){
+                setTimeout(() => {
+                    this.alert = ''
+                }, 5000);
+                window.scrollTo(0,0);
             }
         },
         components:{

@@ -59,5 +59,9 @@ export default new Router({
       path:'*',
       component:Customers
     }
-  ]
+  ],
+  scrollBehavior(to,from,savedPosition){
+    // return 期望路由跳转页面滚动到哪个的位置
+    return {x:0,y:0}
+  }
 })

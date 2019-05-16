@@ -12,7 +12,7 @@
                 </div>
                 <div class="form-group">
                     <label>电话</label>
-                    <input type="text" class="form-control" placeholder="phone" v-model="customer.phone">
+                    <input type="tel" class="form-control" placeholder="phone" v-model="customer.phone" maxlength="11">
                 </div>
                 <div class="form-group">
                     <label>邮箱</label>
@@ -42,14 +42,15 @@
 </template>
 
 <script>
-    import Alert from './Alert.vue'
-    import AV from '../leancloud.js'
+    import Alert from './Alert'
+    import AV from '../leancloud'
+    import CheckExpFun from '../checkExpFun'
     export default {
         name: 'edit',
         data() {
             return {
-                id:'',
-                alert:'',
+                id: '',
+                alert: '',
                 customer: {
                     name: '',
                     phone: '',
@@ -62,7 +63,7 @@
             }
         },
         methods: {
-            fetchCustomers(){
+            fetchCustomers() {
                 //leancloud
                 var personalData = new AV.Query('personalDatas');
                 personalData.get(this.id)
@@ -91,14 +92,20 @@
             },
             editCustomer() {
                 if (!this.customer.name || !this.customer.phone || !this.customer.email) {
-                    console.log('请输入相应的内容')
                     this.alert = '请输入相应的内容！'
+                    return
+                } else if ((!CheckExpFun.checkPhone(this.customer.phone)) || (this.customer.phone.length < 11)) {
+                    this.alert = '请输入正确的电话号码！'
+                    return
+                } else if (!CheckExpFun.checkEmail(this.customer.email)) {
+                    this.alert = '请输入正确的邮箱！'
+                    return
                 } else {
                     //leancloud
                     var customers = AV.Object.createWithoutData('personalDatas', this.id);
                     customers.save(this.customer)
                         .then((res) => {
-                            this.$router.push({name:'customers',params:{ alert:'信息编辑成功！'}});
+                            this.$router.push({ name: 'customersDetail', params: { alert: '信息编辑成功！' } });
                         })
                         .catch((error) => {
                             console.log(error)
@@ -134,10 +141,18 @@
             }
         },
         created() {
-            this.id=this.$route.params.id;
+            this.id = this.$route.params.id;
             this.fetchCustomers();
         },
-        components:{
+        updated() {
+            if (this.alert) {
+                setTimeout(() => {
+                    this.alert = ''
+                }, 5000);
+                window.scrollTo(0,0);
+            }
+        },
+        components: {
             Alert
         }
     }

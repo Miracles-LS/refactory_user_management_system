@@ -1,5 +1,6 @@
 <template>
   <div class="customersDetail container">
+    <Alert v-if="alert" :message="alert"></Alert>
     <router-link to="/" class="btn btn-default">返回</router-link>
     <h1 class="page-header">{{customer.name}}
       <span class="pull-right">
@@ -13,21 +14,24 @@
     </ul>
     <ul class="list-group">
       <li class="list-group-item"><span class="glyphicon glyphicon-education"></span>{{customer.education}}</li>
-      <li class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span>{{customer.graduationschool}}</li>
-      <li class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span>{{customer.profession}}</li>
-      <li class="list-group-item"><span class="glyphicon glyphicon-asterisk"></span>{{customer.profile}}</li>
+      <li class="list-group-item"><span class="glyphicon glyphicon-flag"></span>{{customer.graduationschool}}</li>
+      <li class="list-group-item"><span class="glyphicon glyphicon glyphicon-book"></span>{{customer.profession}}</li>
+      <li class="list-group-item"><span class="glyphicon glyphicon-list"></span>{{customer.profile}}</li>
     </ul>
   </div>
 </template>
 
 <script>
-  import AV from '../leancloud.js'
+  import AV from '../leancloud'
+  import Alert from './Alert'
   export default {
     name: 'customersDetail',
     data() {
       return {
         id: '',
-        customer: {}
+        customer: {},
+        alert: '',
+        scrollTop:false
       }
     },
     methods: {
@@ -87,8 +91,23 @@
     },
     created() {
       this.id = this.$route.params.id;
+      this.alert = this.$route.params.alert;
       this.fetchCustomers(this.id);
     },
+    updated() {
+      if (this.alert) {
+        setTimeout(() => {
+          this.alert = ''
+        }, 5000);
+        if (!this.scrollTop) {
+          window.scrollTo(0, 0);
+          this.scrollTop = true;
+        }
+      }
+    },
+    components: {
+      Alert
+    }
   }
 </script>
 <style scoped>

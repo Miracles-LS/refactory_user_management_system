@@ -47,7 +47,8 @@
     },
     methods: {
       makeUserName(){
-        if (this.$store.state.userName) {
+        console.log(this.$store.state.logined)
+        if (this.$store.state.logined) {
           this.userName = this.$store.state.userName
         }
       },
@@ -56,7 +57,6 @@
         AV.User.logOut();
         // 现在的 currentUser 是 null 了
         var currentUser = AV.User.current();
-        console.log(currentUser)
         if(!currentUser){
           this.$router.push('login')
           this.userName='';

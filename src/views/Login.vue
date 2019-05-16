@@ -26,7 +26,7 @@
     </div>
 </template>
 <script>
-    import AV from '../leancloud.js'
+    import AV from '../leancloud'
     import Alert from './Alert'
     export default {
         name: 'login',
@@ -35,7 +35,7 @@
                 userName: '',
                 password: '',
                 alert:'',
-                warning:''
+                warning:'',
             }
         },
         methods: {
