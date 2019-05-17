@@ -47,7 +47,6 @@
     },
     methods: {
       makeUserName(){
-        console.log(this.$store.state.logined)
         if (this.$store.state.logined) {
           this.userName = this.$store.state.userName
         }
